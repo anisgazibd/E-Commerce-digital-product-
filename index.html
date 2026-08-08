@@ -4,28 +4,260 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ডিজিটাল স্টোর</title>
-    <!-- CSS ফাইলটি যুক্ত করা হলো -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- হেডার সেকশন শুরু (পয়েন্ট ১) -->
+    <!-- হেডার সেকশন -->
     <header class="header">
-        <div class="logo">
-            <!-- আপনি চাইলে এখানে আপনার ওয়েবসাইটের আসল নাম লিখে দিতে পারেন -->
-            <h1>Digital Store</h1> 
+        <div class="top-row">
+            <div class="logo">
+                <h1>Digital Store</h1>
+            </div>
+            <div class="cart-icon">
+                🛒 <span>0</span>
+            </div>
         </div>
         
         <div class="search-bar">
             <input type="text" placeholder="প্রোডাক্ট খুঁজুন...">
             <button>Search</button>
         </div>
-        
-        <div class="cart-icon">
-            🛒 কার্ট (0)
-        </div>
     </header>
-    <!-- হেডার সেকশন শেষ -->
+    <!-- ২. অ্যাড স্লাইডিং ব্যানার সেকশন শুরু -->
+    <div class="slider-container">
+        <div class="slider">
+            <!-- প্রথম ব্যানার -->
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&auto=format&fit=crop&q=60" alt="Special Offer">
+            </div>
+            <!-- দ্বিতীয় ব্যানার -->
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60" alt="Digital Products">
+            </div>
+            <!-- তৃতীয় ব্যানার -->
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=60" alt="Online Courses">
+            </div>
+        </div>
+    </div>
+    <!-- অ্যাড স্লাইডিং ব্যানার সেকশন শেষ -->
+              <!-- ৩. প্রোডাক্ট ক্যাটাগরি সেকশন শুরু (১০০% এইচডি SVG আইকন) -->
+    <section class="categories-section">
+        <h2 class="section-title">ক্যাটাগরি</h2>
+        <div class="category-grid">
+            <div class="category-card">
+                <div class="icon-box course-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                </div>
+                <span>অনলাইন কোর্স</span>
+            </div>
+            <div class="category-card">
+                <div class="icon-box app-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                </div>
+                <span>মোবাইল অ্যাপস</span>
+            </div>
+            <div class="category-card">
+                <div class="icon-box pc-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+                <span>পিসি অ্যাপস</span>
+            </div>
+            <div class="category-card">
+                <div class="icon-box plp-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                </div>
+                <span>PLP ফাইল</span>
+            </div>
+            <div class="category-card">
+                <div class="icon-box pdf-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                </div>
+                <span>PDF ইবুক</span>
+            </div>
+            <div class="category-card">
+                <div class="icon-box psd-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.92 0 1.5-.72 1.5-1.5 0-.4-.15-.78-.42-1.07-.27-.29-.42-.68-.42-1.08 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-4.97-4.48-9-10-9z"/></svg>
+                </div>
+                <span>ফটোশপ PSD</span>
+            </div>
+            <div class="category-card">
+                <div class="icon-box doc-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <span>ডকুমেন্ট</span>
+            </div>
+            <div class="category-card">
+                <div class="icon-box all-bg">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                </div>
+                <span>সব ক্যাটাগরি</span>
+            </div>
+        </div>
+    </section>
+    <!-- ৩. প্রোডাক্ট ক্যাটাগরি সেকশন শেষ -->
+        <!-- ৪. ফর ইউ এবং সাজেস্ট ক্যাটাগরি সেকশন শুরু -->
+    
+    <!-- ফর ইউ -->
+    <section class="product-section">
+        <div class="section-header">
+            <h2 class="section-title">ফর ইউ</h2>
+            <a href="#" class="see-all">সব দেখুন</a>
+        </div>
+        <div class="product-scroll-container">
+            <!-- প্রোডাক্ট ১ -->
+            <div class="product-card">
+                <div class="badge badge-hot">Top Sell</div>
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&q=80" alt="Facebook Marketing">
+                <div class="product-info">
+                    <h3 class="product-title">ফেসবুক মার্কেটিং প্রো কোর্স</h3>
+                    <div class="product-rating">⭐⭐⭐⭐⭐ (4.9)</div>
+                    <div class="product-price">
+                        <span class="current-price">৳ ৪৯৯</span>
+                        <span class="old-price">৳ ৯৯৯</span>
+                    </div>
+                </div>
+            </div>
+            <!-- প্রোডাক্ট ২ -->
+            <div class="product-card">
+                <div class="badge badge-hot">Top Sell</div>
+                <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?w=400&q=80" alt="PLP Files">
+                <div class="product-info">
+                    <h3 class="product-title">৩০০+ প্রিমিয়াম PLP ফাইল প্যাক</h3>
+                    <div class="product-rating">⭐⭐⭐⭐⭐ (4.8)</div>
+                    <div class="product-price">
+                        <span class="current-price">৳ ২০০</span>
+                        <span class="old-price">৳ ৫০০</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- সাজেস্টেড -->
+    <section class="product-section">
+        <div class="section-header">
+            <h2 class="section-title">সাজেস্টেড</h2>
+            <a href="#" class="see-all">সব দেখুন</a>
+        </div>
+        <div class="product-scroll-container">
+            <!-- প্রোডাক্ট ৩ -->
+            <div class="product-card">
+                <div class="badge badge-new">New</div>
+                <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400&q=80" alt="Photoshop Course">
+                <div class="product-info">
+                    <h3 class="product-title">ফটোশপ মাস্টারক্লাস - জিরো টু হিরো</h3>
+                    <div class="product-rating">⭐⭐⭐⭐⭐ (5.0)</div>
+                    <div class="product-price">
+                        <span class="current-price">৳ ২৯৯</span>
+                        <span class="old-price">৳ ৬০০</span>
+                    </div>
+                </div>
+            </div>
+            <!-- প্রোডাক্ট ৪ -->
+            <div class="product-card">
+                <div class="badge badge-new">New</div>
+                <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80" alt="App Source Code">
+                <div class="product-info">
+                    <h3 class="product-title">১০০+ মোবাইল অ্যাপস সোর্স কোড</h3>
+                    <div class="product-rating">⭐⭐⭐⭐⭐ (4.7)</div>
+                    <div class="product-price">
+                        <span class="current-price">৳ ৯৯৯</span>
+                        <span class="old-price">৳ ১৫০০</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ৪. ফর ইউ এবং সাজেস্ট ক্যাটাগরি সেকশন শেষ -->
+    <!-- ৫. অল প্রোডাক্ট সেকশন শুরু -->
+    <section class="product-section">
+        <div class="section-header">
+            <h2 class="section-title">অল প্রোডাক্ট</h2>
+        </div>
+        
+        <div class="all-products-grid">
+            <!-- প্রোডাক্ট ১ -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&q=80" alt="Facebook Marketing">
+                <div class="product-info">
+                    <h3 class="product-title">ফেসবুক মার্কেটিং প্রো কোর্স</h3>
+                    <div class="product-rating">⭐⭐⭐⭐⭐ (4.9)</div>
+                    <div class="product-price">
+                        <span class="current-price">৳ ৪৯৯</span>
+                        <span class="old-price">৳ ৯৯৯</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- প্রোডাক্ট ২ -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?w=400&q=80" alt="PLP Files">
+                <div class="product-info">
+                    <h3 class="product-title">৩০০+ প্রিমিয়াম PLP ফাইল প্যাক</h3>
+                    <div class="product-rating">⭐⭐⭐⭐⭐ (4.8)</div>
+                    <div class="product-price">
+                        <span class="current-price">৳ ২০০</span>
+                        <span class="old-price">৳ ৫০০</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- প্রোডাক্ট ৩ -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=400&q=80" alt="Photoshop Course">
+                <div class="product-info">
+                    <h3 class="product-title">ফটোশপ মাস্টারক্লাস - জিরো টু হিরো</h3>
+                    <div class="product-rating">⭐⭐⭐⭐⭐ (5.0)</div>
+                    <div class="product-price">
+                        <span class="current-price">৳ ২৯৯</span>
+                        <span class="old-price">৳ ৬০০</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- প্রোডাক্ট ৪ -->
+            <div class="product-card">
+                <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&q=80" alt="App Source Code">
+                <div class="product-info">
+                    <h3 class="product-title">১০০+ মোবাইল অ্যাপস সোর্স কোড</h3>
+                    <div class="product-rating">⭐⭐⭐⭐⭐ (4.7)</div>
+                    <div class="product-price">
+                        <span class="current-price">৳ ৯৯৯</span>
+                        <span class="old-price">৳ ১৫০০</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ৫. অল প্রোডাক্ট সেকশন শেষ -->
+
+    <!-- ৬. ফুটার সেকশন শুরু -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">About Us</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+        </div>
+        
+        <div class="social-media">
+            <!-- ফেসবুক -->
+            <a href="#"><img src="https://img.icons8.com/fluency/48/facebook-new.png" alt="Facebook"></a>
+            <!-- হোয়াটসঅ্যাপ -->
+            <a href="#"><img src="https://img.icons8.com/color/48/whatsapp--v1.png" alt="WhatsApp"></a>
+            <!-- টেলিগ্রাম -->
+            <a href="#"><img src="https://img.icons8.com/color/48/telegram-app--v1.png" alt="Telegram"></a>
+            <!-- ইউটিউব -->
+            <a href="#"><img src="https://img.icons8.com/color/48/youtube-play.png" alt="YouTube"></a>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2026 Digital Store. All Rights Reserved.
+        </div>
+    </footer>
+    <!-- ৬. ফুটার সেকশন শেষ -->
 
 </body>
 </html>
