@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ডিজিটাল অর্ডার চেকআউট</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- হেডার -->
+    <header class="header">
+        <div class="top-row">
+            <a href="product.html" class="back-btn">⬅️ ব্যাক</a> 
+            <div class="header-title">ইনস্ট্যান্ট অ্যাক্সেস চেকআউট</div>
+        </div>
+    </header>
+
+    <div class="checkout-container">
+        
+        <!-- অর্ডার সামারি -->
+        <div class="checkout-card">
+            <h3 class="card-title">📚 প্রোডাক্ট সামারি</h3>
+            
+            <div class="cart-item">
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80" alt="Product">
+                <div class="item-details">
+                    <h4>ফেসবুক মার্কেটিং প্রো কোর্স (A to Z)</h4>
+                    <p>টাইপ: ডিজিটাল ডাউনলোড / কোর্স</p>
+                </div>
+            </div>
+
+            <div class="price-breakdown">
+                <div class="price-row">
+                    <span>প্রোডাক্ট মূল্য:</span>
+                    <span>৳ 499</span>
+                </div>
+                <div class="price-row">
+                    <span>ডিজিটাল ডেলিভারি ফি:</span>
+                    <span style="color: #27ae60; font-weight: bold;">ফ্রি (instant)</span>
+                </div>
+                <hr>
+                <div class="price-row total-row">
+                    <span>সর্বমোট পরিশোধযোগ্য:</span>
+                    <span>৳ 499</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- পেমেন্ট ইন্সট্রাকশন বক্স -->
+        <div class="checkout-card payment-instruction-box">
+            <h3 class="card-title">📱 পেমেন্ট করার নিয়ম (bKash / Nagad)</h3>
+            <p class="inst-text">নিচের যেকোনো নম্বরে <strong>৳৪৯৯</strong> সেন্ড মানি (Send Money) করুন:</p>
+            
+            <div class="number-box">
+                <div><strong>bKash (Personal):</strong> <span class="num">017XXXXXXXX</span></div>
+                <div><strong>Nagad (Personal):</strong> <span class="num">018XXXXXXXX</span></div>
+            </div>
+            <p class="inst-sub">টাকা পাঠানোর পর নিচের ফর্মে আপনার তথ্য ও TrxID দিন।</p>
+        </div>
+
+        <!-- কাস্টমার তথ্য ও TrxID ইনপুট ফর্ম -->
+        <div class="checkout-card">
+            <h3 class="card-title">📩 কাস্টমার তথ্য ও পেমেন্ট ভেরিফিকেশন</h3>
+            
+            <form id="digitalOrderForm" onsubmit="handleDigitalOrder(event)">
+                
+                <div class="form-group">
+                    <label for="custName">আপনার নাম *</label>
+                    <input type="text" id="custName" placeholder="যেমন: মো: আরিয়ান রহমান" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="custEmail">ইমেইল এড্রেস (যেখানে ফাইল/লিংক যাবে) *</label>
+                    <input type="email" id="custEmail" placeholder="example@gmail.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="custPhone">হোয়াটসঅ্যাপ / মোবাইল নম্বর *</label>
+                    <input type="tel" id="custPhone" placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" required>
+                </div>
+
+                <div class="form-group">
+                    <label>পেমেন্ট মেথড সিলেক্ট করুন *</label>
+                    <select id="paymentMethod" required>
+                        <option value="bKash">bKash (বিকাশ)</option>
+                        <option value="Nagad">Nagad (নগদ)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="senderPhone">যে নম্বর থেকে টাকা পাঠিয়েছেন *</label>
+                    <input type="tel" id="senderPhone" placeholder="01XXXXXXXXX" pattern="01[3-9][0-9]{8}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="trxId">ট্রানজেকশন আইডি (TrxID) *</label>
+                    <input type="text" id="trxId" placeholder="যেমন: 9J7X8KLM" required style="text-transform: uppercase;">
+                </div>
+
+                <button type="submit" class="confirm-order-btn">
+                    ⚡ অর্ডার প্লেস করুন (৳৪৯৯)
+                </button>
+
+            </form>
+        </div>
+
+        <div class="trust-badge">
+            ⚡ পেমেন্ট ভেরিফাই হওয়ার সাথে সাথেই আপনার ইমেইলে ফাইল/কোর্স লিংক পাঠিয়ে দেওয়া হবে।
+        </div>
+
+    </div>
+
+    <!-- অর্ডার সাবমিট লজিক -->
+    <script>
+        function handleDigitalOrder(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById("custName").value;
+            const email = document.getElementById("custEmail").value;
+            const trxId = document.getElementById("trxId").value;
+            
+            alert(`ধন্যবাদ ${name}!\n\nআপনার পেমেন্ট ভেরিফিকেশন রিকোয়েস্ট গ্রহণ করা হয়েছে।\nTrxID: ${trxId}\n\nপেমেন্ট ভেরিফাই করে অল্প কিছুক্ষণের মধ্যেই ${email} ইমেইলে আপনার ডাউনলোড লিংক বা কোর্স এক্সেস পাঠিয়ে দেয়া হবে।`);
+            
+            window.location.href = "index.html";
+        }
+    </script>
+
+</body>
+</html>
