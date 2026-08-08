@@ -1,0 +1,57 @@
+/* ডিফল্ট মার্জিন ও প্যাডিং জিরো করা হলো */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* হেডারের ডিজাইন */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50; /* গাঢ় নীল রঙের ব্যাকগ্রাউন্ড */
+    color: white;
+    padding: 15px 50px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.logo h1 {
+    font-size: 26px;
+    color: #f39c12; /* আকর্ষণীয় হলুদ/সোনালী রঙ */
+    cursor: pointer;
+}
+
+.search-bar {
+    display: flex;
+}
+
+.search-bar input {
+    padding: 10px;
+    width: 300px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+}
+
+.search-bar button {
+    padding: 10px 20px;
+    background-color: #f39c12;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 0 4px 4px 0;
+    transition: 0.3s;
+}
+
+.search-bar button:hover {
+    background-color: #d68910;
+}
+
+.cart-icon {
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
