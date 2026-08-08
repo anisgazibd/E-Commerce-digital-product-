@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্রোডাক্ট ডিটেইলস</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- হেডার (ব্যাক বাটন ও কার্ট) -->
+    <header class="header">
+        <div class="top-row">
+            <a href="index.html" class="back-btn">⬅️ ব্যাক</a> 
+            <div class="cart-icon">🛒 <span id="cartCount">0</span></div>
+        </div>
+    </header>
+
+    <!-- প্রোডাক্ট ডিটেইলস কন্টেইনার -->
+    <div class="product-page-container">
+        
+        <!-- ৭. প্রোডাক্ট ইমেজ গ্যালারি -->
+        <div class="main-image-box">
+            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=80" id="mainProductImg" alt="Main Product" class="main-image">
+        </div>
+        
+        <div class="thumbnail-gallery">
+            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80" class="thumb-active" onclick="changeImage(this)">
+            <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?w=200&q=80" onclick="changeImage(this)">
+            <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?w=200&q=80" onclick="changeImage(this)">
+        </div>
+
+        <!-- ৮ ও ৯. টাইটেল এবং রেটিং -->
+        <h2 class="details-title">ফেসবুক মার্কেটিং প্রো কোর্স (A to Z)</h2>
+        <div class="details-rating">⭐⭐⭐⭐⭐ <span>(4.9 - 150 Reviews)</span></div>
+
+        <!-- ১০. প্রোডাক্টের দাম -->
+        <div class="details-price">
+            <span class="price-now">৳ ৪৯৯</span>
+            <span class="price-old">৳ ৯৯৯</span>
+        </div>
+
+        <!-- ১১. কোয়ান্টিটি বা পরিমাণ -->
+        <div class="quantity-section">
+            <span>পরিমাণ:</span>
+            <div class="qty-box">
+                <button class="qty-btn" onclick="decreaseQty()">-</button>
+                <input type="number" id="productQty" value="1" min="1" readonly>
+                <button class="qty-btn" onclick="increaseQty()">+</button>
+            </div>
+        </div>
+
+        <!-- ১২. অ্যাড টু কার্ট এবং বাই নাও বাটন -->
+        <div class="action-buttons">
+            <button class="add-to-cart-btn" onclick="addToCart()">🛒 Add to Cart</button>
+            <a href="checkout.html" style="text-decoration: none; flex: 1;">
+                <button class="buy-now-btn" style="width: 100%;">⚡ Buy Now</button>
+            </a>
+        </div>
+
+        <!-- ১৩. কন্টাক্ট বাটন (হোয়াটসঅ্যাপ ও টেলিগ্রাম) -->
+        <div class="contact-buttons">
+            <a href="https://wa.me/" class="whatsapp-btn" target="_blank">💬 WhatsApp-এ কথা বলুন</a>
+            <a href="https://t.me/" class="telegram-btn" target="_blank">✈️ Telegram-এ কথা বলুন</a>
+        </div>
+
+        <!-- ১৪. প্রোডাক্ট ডেসক্রিপশন -->
+        <div class="description-box">
+            <h3>📝 প্রোডাক্ট ডেসক্রিপশন</h3>
+            <p>এই কোর্সে আপনি একদম বেসিক থেকে অ্যাডভান্স লেভেলের ফেসবুক মার্কেটিং শিখতে পারবেন। কীভাবে অ্যাড রান করতে হয়, পিক্সেল সেটআপ এবং সেলস জেনারেট করতে হয় তার সবকিছু বিস্তারিত দেখানো হয়েছে।</p>
+        </div>
+
+        <!-- ১৫. কাস্টমার রিভিউ সেকশন -->
+        <div class="review-box">
+            <h3>⭐ কাস্টমার রিভিউ দিন</h3>
+            <textarea placeholder="প্রোডাক্টটি আপনার কেমন লেগেছে তা লিখুন..."></textarea>
+            <button class="submit-review">রিভিউ সাবমিট করুন</button>
+        </div>
+    </div>
+
+    <!-- গ্যালারি এবং কার্ট লজিক -->
+    <script>
+        function changeImage(element) {
+            document.getElementById("mainProductImg").src = element.src;
+            let thumbs = document.querySelectorAll('.thumbnail-gallery img');
+            thumbs.forEach(thumb => thumb.classList.remove('thumb-active'));
+            element.classList.add('thumb-active');
+        }
+
+        let qtyInput = document.getElementById("productQty");
+        function increaseQty() {
+            qtyInput.value = parseInt(qtyInput.value) + 1;
+        }
+        function decreaseQty() {
+            if (parseInt(qtyInput.value) > 1) {
+                qtyInput.value = parseInt(qtyInput.value) - 1;
+            }
+        }
+
+        let cartCount = 0;
+        function addToCart() {
+            cartCount += parseInt(qtyInput.value);
+            document.getElementById("cartCount").innerText = cartCount;
+            alert("প্রোডাক্টটি কার্টে যুক্ত হয়েছে!");
+        }
+    </script>
+
+</body>
+</html>
