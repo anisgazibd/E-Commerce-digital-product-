@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অ্যাডমিন কন্ট্রোল প্যানেল</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+        /* সাইডবার স্টাইল */
+        .sidebar {
+            width: 260px;
+            background: #1e293b;
+            color: #fff;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+        .sidebar h2 {
+            font-size: 18px;
+            color: #ff6600;
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #334155;
+            letter-spacing: 0.5px;
+        }
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .menu-btn {
+            background: transparent;
+            color: #cbd5e1;
+            border: none;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .menu-btn:hover, .menu-btn.active {
+            background: #ff6600;
+            color: #fff;
+            font-weight: 600;
+        }
+        /* মেইন কন্টেন্ট */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: #fff;
+            padding: 18px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            border-left: 4px solid #ff6600;
+        }
+        .stat-card h3 {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+        .stat-card p {
+            font-size: 22px;
+            font-weight: bold;
+            color: #0f172a;
+        }
+        /* কার্ড ও ফর্ম */
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            margin-bottom: 15px;
+            color: #1e293b;
+            font-size: 16px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 8px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            flex: 1;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #475569;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #ff6600;
+        }
+        .submit-btn {
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .submit-btn:hover { background: #16a34a; }
+        
+        /* টেবিল */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            min-width: 600px;
+        }
+        table th, table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+        }
+        table th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+        }
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+        .edit-btn { background: #3b82f6; color: #fff; }
+        .delete-btn { background: #ef4444; color: #fff; }
+        .badge-status {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-show { background: #dcfce7; color: #15803d; }
+        .status-hide { background: #fee2e2; color: #b91c1c; }
+
+        /* মোবাইল স্ক্রিনের রেসপন্সিভ ডিজাইন */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; padding: 12px; }
+            .sidebar h2 { border-bottom: none; padding-bottom: 4px; }
+            .menu-container { flex-direction: row; overflow-x: auto; padding-bottom: 4px; }
+            .menu-btn { padding: 8px 12px; font-size: 13px; }
+            .form-row { flex-direction: column; gap: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- সাইডবার মেনু -->
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <div class="menu-container">
+            <button class="menu-btn active" onclick="showSection('dashboard')">📊 ড্যাশবোর্ড</button>
+            <button class="menu-btn" onclick="showSection('settings')">⚙️ সাইট সেটিংস</button>
+            <button class="menu-btn" onclick="showSection('banners')">🖼️ ব্যানার স্লাইডার</button>
+            <button class="menu-btn" onclick="showSection('categories')">📁 ক্যাটাগরি</button>
+            <button class="menu-btn" onclick="showSection('products')">📦 প্রোডাক্টস</button>
+            <button class="menu-btn" onclick="showSection('orders')">🛒 অর্ডারস</button>
+        </div>
+    </div>
+
+    <!-- মূল কন্টেন্ট -->
+    <div class="main-content">
+        <div class="header">
+            <h2 id="pageTitle" style="font-size: 18px; color: #0f172a;">ড্যাশবোর্ড ওভারভিউ</h2>
+            <button onclick="logoutAdmin()" style="padding: 6px 14px; background: #ef4444; color:#fff; border:none; border-radius:4px; cursor:pointer; font-weight:600;">লগআউট</button>
+        </div>
+
+        <!-- ১. ড্যাশবোর্ড সেকশন -->
+        <div id="dashboardSection">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>মোট প্রোডাক্ট</h3>
+                    <p id="statProducts">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>মোট ক্যাটাগরি</h3>
+                    <p id="statCategories">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>মোট অর্ডার</h3>
+                    <p id="statOrders">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>মোট ব্যানার</h3>
+                    <p id="statBanners">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ২. সাইট সেটিংস সেকশন -->
+        <div id="settingsSection" style="display: none;">
+            <div class="card">
+                <h3>সাধারণ সাইট সেটিংস ও সোশ্যাল লিংক</h3>
+                <form id="settingsForm" onsubmit="saveSettings(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ওয়েবসাইটের নাম:</label>
+                            <input type="text" id="siteName" placeholder="যেমন: Digital Store BD" required>
+                        </div>
+                        <div class="form-group">
+                            <label>WhatsApp নম্বর (দেশি কোডসহ):</label>
+                            <input type="text" id="siteWhatsapp" placeholder="যেমন: 8801700000000">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Telegram লিংক / ইউজারনেম:</label>
+                            <input type="text" id="siteTelegram" placeholder="https://t.me/yourchannel">
+                        </div>
+                        <div class="form-group">
+                            <label>Facebook পেজ লিংক:</label>
+                            <input type="url" id="siteFacebook" placeholder="https://facebook.com/yourpage">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>YouTube চ্যানেল লিংক:</label>
+                            <input type="url" id="siteYoutube" placeholder="https://youtube.com/c/yourchannel">
+                        </div>
+                        <div class="form-group">
+                            <label>Instagram লিংক:</label>
+                            <input type="url" id="siteInstagram" placeholder="https://instagram.com/yourprofile">
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">💾 সেটিংস সেভ করুন</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ৩. ব্যানার সেকশন -->
+        <div id="bannersSection" style="display: none;">
+            <div class="card">
+                <h3>নতুন স্লাইডিং ব্যানার / পোস্টার যোগ করুন</h3>
+                <form id="addBannerForm" onsubmit="handleAddBanner(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ব্যানার টাইটেল / অফার নাম:</label>
+                            <input type="text" id="bTitle" placeholder="যেমন: ঈদ স্পেশাল ডিসকাউন্ট" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ইমেজ ইউআরএল (Banner Image URL):</label>
+                            <input type="url" id="bImg" placeholder="https://images.unsplash.com/..." required>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">+ ব্যানার যুক্ত করুন</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>বিদ্যমান ব্যানারসমূহ</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ছবি</th>
+                                <th>টাইটেল</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bannersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ৪. ক্যাটাগরি সেকশন -->
+        <div id="categoriesSection" style="display: none;">
+            <div class="card">
+                <h3>নতুন ক্যাটাগরি যোগ করুন</h3>
+                <form id="addCategoryForm" onsubmit="handleAddCategory(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ক্যাটাগরির নাম:</label>
+                            <input type="text" id="cName" placeholder="যেমন: গ্রাফিক্স ডিজাইন" required>
+                        </div>
+                        <div class="form-group">
+                            <label>হোমপেজে সামনে প্রদর্শন করবেন?</label>
+                            <select id="cShowHome">
+                                <option value="true">হ্যাঁ (ডিসপ্লের সামনে দেখাবে)</option>
+                                <option value="false">না (শুধু শপ অপশনে থাকবে)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">+ ক্যাটাগরি যুক্ত করুন</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>সব ক্যাটাগরি তালিকা</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ক্যাটাগরির নাম</th>
+                                <th>হোমপেজ স্ট্যাটাস</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ৫. প্রোডাক্ট ম্যানেজমেন্ট সেকশন -->
+        <div id="productsSection" style="display: none;">
+            <div class="card">
+                <h3 id="productFormTitle">নতুন প্রোডাক্ট যোগ করুন</h3>
+                <form id="productForm" onsubmit="handleProductSubmit(event)">
+                    <input type="hidden" id="editProductId">
+                    <div class="form-group">
+                        <label>প্রোডাক্টের নাম:</label>
+                        <input type="text" id="pTitle" placeholder="যেমন: ফেসবুক মার্কেটিং মাস্টারকোর্স" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>বর্তমান দাম (৳):</label>
+                            <input type="number" id="pPrice" placeholder="499" required>
+                        </div>
+                        <div class="form-group">
+                            <label>পূর্বের দাম (৳):</label>
+                            <input type="number" id="pOldPrice" placeholder="999">
+                        </div>
+                        <div class="form-group">
+                            <label>ক্যাটাগরি সিলেক্ট করুন:</label>
+                            <select id="pCategory" required>
+                                <!-- ডাইনামিকভাবে আসবে -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>মেইন ইমেজ ইউআরএল (Main Image URL):</label>
+                        <input type="url" id="pMainImg" placeholder="https://images.unsplash.com/..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>গ্যালারি ইমেজ ইউআরএল (কমমা দিয়ে একাধিক বসান):</label>
+                        <textarea id="pGalleryImgs" rows="2" placeholder="https://img1.com/a.jpg, https://img2.com/b.jpg"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>প্রোডাক্ট ডেসক্রিপশন (বিস্তারিত বিবরণ):</label>
+                        <textarea id="pDesc" rows="4" placeholder="প্রোডাক্ট বা কোর্সের বিস্তারিত বিবরণ লিখুন..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="productFormBtn">+ প্রোডাক্ট সেভ করুন</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>বিদ্যমান প্রোডাক্টসমূহ</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ছবি</th>
+                                <th>নাম</th>
+                                <th>ক্যাটাগরি</th>
+                                <th>দাম</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ৬. অর্ডার সেকশন -->
+        <div id="ordersSection" style="display: none;">
+            <div class="card">
+                <h3>কাস্টমার অর্ডারসমূহ</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>আইডি</th>
+                                <th>নাম</th>
+                                <th>মোবাইল</th>
+                                <th>প্রোডাক্ট</th>
+                                <th>দাম</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- জাভাস্ক্রিপ্ট লজিক -->
+    <script>
+        // সেকশন চেঞ্জ
+        function showSection(section) {
+            const sections = ['dashboard', 'settings', 'banners', 'categories', 'products', 'orders'];
+            sections.forEach(s => document.getElementById(s + 'Section').style.display = 'none');
+            
+            const buttons = document.querySelectorAll('.menu-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(section + 'Section').style.display = 'block';
+            
+            const titleMap = {
+                'dashboard': 'ড্যাশবোর্ড ওভারভিউ',
+                'settings': 'ওয়েবসাইট সেটিংস ও সোশ্যাল মিডিয়া',
+                'banners': 'স্লাইডিং ব্যানার ম্যানেজমেন্ট',
+                'categories': 'ক্যাটাগরি ম্যানেজমেন্ট',
+                'products': 'প্রোডাক্ট ম্যানেজমেন্ট',
+                'orders': 'কাস্টমার অর্ডারসমূহ'
+            };
+            document.getElementById('pageTitle').innerText = titleMap[section];
+
+            // ডাটা রেন্ডার
+            if(section === 'settings') loadSettings();
+            if(section === 'banners') renderBanners();
+            if(section === 'categories') renderCategories();
+            if(section === 'products') { populateCategoryDropdown(); renderProducts(); }
+            if(section === 'orders') renderOrders();
+            updateDashboardStats();
+        }
+
+        // --- ১. সাইট সেটিংস ---
+        function getSettings() {
+            return JSON.parse(localStorage.getItem("site_settings")) || {
+                siteName: "Digital Store BD",
+                whatsapp: "8801700000000",
+                telegram: "https://t.me/example",
+                facebook: "https://facebook.com",
+                youtube: "https://youtube.com",
+                instagram: "https://instagram.com"
+            };
+        }
+
+        function loadSettings() {
+            const s = getSettings();
+            document.getElementById('siteName').value = s.siteName || '';
+            document.getElementById('siteWhatsapp').value = s.whatsapp || '';
+            document.getElementById('siteTelegram').value = s.telegram || '';
+            document.getElementById('siteFacebook').value = s.facebook || '';
+            document.getElementById('siteYoutube').value = s.youtube || '';
+            document.getElementById('siteInstagram').value = s.instagram || '';
+        }
+
+        function saveSettings(e) {
+            e.preventDefault();
+            const settings = {
+                siteName: document.getElementById('siteName').value,
+                whatsapp: document.getElementById('siteWhatsapp').value,
+                telegram: document.getElementById('siteTelegram').value,
+                facebook: document.getElementById('siteFacebook').value,
+                youtube: document.getElementById('siteYoutube').value,
+                instagram: document.getElementById('siteInstagram').value
+            };
+            localStorage.setItem("site_settings", JSON.stringify(settings));
+            alert("সাইট সেটিংস সফলভাবে আপডেট হয়েছে!");
+        }
+
+        // --- ২. ব্যানার স্লাইডার ---
+        function getBanners() {
+            return JSON.parse(localStorage.getItem("site_banners")) || [
+                { id: 1, title: "মেগা অফার ৫০% ছাড়", img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1000&q=80" }
+            ];
+        }
+
+        function handleAddBanner(e) {
+            e.preventDefault();
+            const banners = getBanners();
+            banners.push({
+                id: Date.now(),
+                title: document.getElementById('bTitle').value,
+                img: document.getElementById('bImg').value
+            });
+            localStorage.setItem("site_banners", JSON.stringify(banners));
+            document.getElementById('addBannerForm').reset();
+            renderBanners();
+            updateDashboardStats();
+        }
+
+        function renderBanners() {
+            const banners = getBanners();
+            const tbody = document.getElementById('bannersTable');
+            tbody.innerHTML = banners.length === 0 ? `<tr><td colspan="3" style="text-align:center;">কোনো ব্যানার নেই</td></tr>` : "";
+            banners.forEach(b => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><img src="${b.img}" width="80" height="40" style="object-fit:cover; border-radius:4px;"></td>
+                        <td>${b.title}</td>
+                        <td><button class="action-btn delete-btn" onclick="deleteBanner(${b.id})">মুছুন</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteBanner(id) {
+            if(confirm("ব্যানারটি মুছে ফেলতে চান?")) {
+                let banners = getBanners().filter(b => b.id !== id);
+                localStorage.setItem("site_banners", JSON.stringify(banners));
+                renderBanners();
+                updateDashboardStats();
+            }
+        }
+
+        // --- ৩. ক্যাটাগরি ---
+        function getCategories() {
+            return JSON.parse(localStorage.getItem("site_categories")) || [
+                { id: 1, name: "অনলাইন কোর্স", showHome: true },
+                { id: 2, name: "PLP ফাইল", showHome: true },
+                { id: 3, name: "মোবাইল অ্যাপস", showHome: false }
+            ];
+        }
+
+        function handleAddCategory(e) {
+            e.preventDefault();
+            const categories = getCategories();
+            categories.push({
+                id: Date.now(),
+                name: document.getElementById('cName').value,
+                showHome: document.getElementById('cShowHome').value === 'true'
+            });
+            localStorage.setItem("site_categories", JSON.stringify(categories));
+            document.getElementById('addCategoryForm').reset();
+            renderCategories();
+            updateDashboardStats();
+        }
+
+        function renderCategories() {
+            const categories = getCategories();
+            const tbody = document.getElementById('categoriesTable');
+            tbody.innerHTML = categories.length === 0 ? `<tr><td colspan="3" style="text-align:center;">কোনো ক্যাটাগরি নেই</td></tr>` : "";
+            categories.forEach(c => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${c.name}</b></td>
+                        <td>
+                            <span class="badge-status ${c.showHome ? 'status-show' : 'status-hide'}">
+                                ${c.showHome ? 'ডিসপ্লেতে শো করবে' : 'শুধু শপে থাকবে'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="toggleCategoryHome(${c.id})">স্ট্যাটাস পরিবর্তন</button>
+                            <button class="action-btn delete-btn" onclick="deleteCategory(${c.id})">মুছুন</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function toggleCategoryHome(id) {
+            let categories = getCategories();
+            categories = categories.map(c => c.id === id ? {...c, showHome: !c.showHome} : c);
+            localStorage.setItem("site_categories", JSON.stringify(categories));
+            renderCategories();
+        }
+
+        function deleteCategory(id) {
+            if(confirm("ক্যাটাগরি টি মুছে ফেলতে চান?")) {
+                let categories = getCategories().filter(c => c.id !== id);
+                localStorage.setItem("site_categories", JSON.stringify(categories));
+                renderCategories();
+                updateDashboardStats();
+            }
+        }
+
+        function populateCategoryDropdown() {
+            const categories = getCategories();
+            const select = document.getElementById('pCategory');
+            select.innerHTML = '<option value="">ক্যাটাগরি বেছে নিন</option>';
+            categories.forEach(c => {
+                select.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+        }
+
+        // --- ৪. প্রোডাক্ট ম্যানেজমেন্ট (Add, Edit, Delete) ---
+        function getProducts() {
+            return JSON.parse(localStorage.getItem("admin_products")) || [];
+        }
+
+        function handleProductSubmit(e) {
+            e.preventDefault();
+            let products = getProducts();
+            const editId = document.getElementById('editProductId').value;
+
+            const galleryRaw = document.getElementById('pGalleryImgs').value;
+            const galleryArray = galleryRaw ? galleryRaw.split(',').map(url => url.trim()) : [];
+
+            const productData = {
+                id: editId ? Number(editId) : Date.now(),
+                title: document.getElementById('pTitle').value,
+                price: Number(document.getElementById('pPrice').value),
+                oldPrice: Number(document.getElementById('pOldPrice').value || 0),
+                category: document.getElementById('pCategory').value,
+                mainImg: document.getElementById('pMainImg').value,
+                galleryImgs: galleryArray,
+                description: document.getElementById('pDesc').value
+            };
+
+            if (editId) {
+                products = products.map(p => p.id === Number(editId) ? productData : p);
+                alert("প্রোডাক্ট আপডেট হয়েছে!");
+            } else {
+                products.push(productData);
+                alert("নতুন প্রোডাক্ট যুক্ত হয়েছে!");
+            }
+
+            localStorage.setItem("admin_products", JSON.stringify(products));
+            resetProductForm();
+            renderProducts();
+            updateDashboardStats();
+        }
+
+        function editProduct(id) {
+            const p = getProducts().find(item => item.id === id);
+            if(!p) return;
+
+            document.getElementById('editProductId').value = p.id;
+            document.getElementById('pTitle').value = p.title;
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pOldPrice').value = p.oldPrice || '';
+            document.getElementById('pCategory').value = p.category;
+            document.getElementById('pMainImg').value = p.mainImg || p.img || '';
+            document.getElementById('pGalleryImgs').value = p.galleryImgs ? p.galleryImgs.join(', ') : '';
+            document.getElementById('pDesc').value = p.description || '';
+
+            document.getElementById('productFormTitle').innerText = "প্রোডাক্ট এডিট করুন";
+            document.getElementById('productFormBtn').innerText = "💾 পরিবর্তন সেভ করুন";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetProductForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('editProductId').value = '';
+            document.getElementById('productFormTitle').innerText = "নতুন প্রোডাক্ট যোগ করুন";
+            document.getElementById('productFormBtn').innerText = "+ প্রোডাক্ট সেভ করুন";
+        }
+
+        function renderProducts() {
+            const products = getProducts();
+            const tbody = document.getElementById('productsTable');
+            tbody.innerHTML = products.length === 0 ? `<tr><td colspan="5" style="text-align:center;">কোনো প্রোডাক্ট পাওয়া যায়নি</td></tr>` : "";
+            products.forEach(p => {
+                const img = p.mainImg || p.img || '';
+                tbody.innerHTML += `
+                    <tr>
+                        <td><img src="${img}" width="35" height="35" style="object-fit:cover; border-radius:4px;"></td>
+                        <td><b>${p.title}</b></td>
+                        <td>${p.category}</td>
+                        <td>৳ ${p.price}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editProduct(${p.id})">এডিট</button>
+                            <button class="action-btn delete-btn" onclick="deleteProduct(${p.id})">মুছুন</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteProduct(id) {
+            if(confirm("প্রোডাক্টটি ডিলিট করতে চান?")) {
+                let products = getProducts().filter(p => p.id !== id);
+                localStorage.setItem("admin_products", JSON.stringify(products));
+                renderProducts();
+                updateDashboardStats();
+            }
+        }
+
+        // --- ৫. অর্ডারস ---
+        function renderOrders() {
+            const orders = JSON.parse(localStorage.getItem("customer_orders")) || [];
+            const tbody = document.getElementById('ordersTable');
+            tbody.innerHTML = orders.length === 0 ? `<tr><td colspan="7" style="text-align:center;">কোনো অর্ডার নেই</td></tr>` : "";
+            orders.forEach(o => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>#${o.id || '101'}</td>
+                        <td>${o.customerName || 'N/A'}</td>
+                        <td>${o.phone || 'N/A'}</td>
+                        <td>${o.productTitle || 'Digital Item'}</td>
+                        <td>৳ ${o.totalPrice || 0}</td>
+                        <td><span class="badge-status status-show">${o.status || 'Pending'}</span></td>
+                        <td><button class="action-btn edit-btn" onclick="toggleOrder('${o.id}')">স্ট্যাটাস চেঞ্জ</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function toggleOrder(id) {
+            let orders = JSON.parse(localStorage.getItem("customer_orders")) || [];
+            orders = orders.map(o => o.id === id ? {...o, status: o.status === 'Completed' ? 'Pending' : 'Completed'} : o);
+            localStorage.setItem("customer_orders", JSON.stringify(orders));
+            renderOrders();
+        }
+
+        // --- ড্যাশবোর্ড আপডেট ---
+        function updateDashboardStats() {
+            document.getElementById('statProducts').innerText = getProducts().length;
+            document.getElementById('statCategories').innerText = getCategories().length;
+            document.getElementById('statBanners').innerText = getBanners().length;
+            const orders = JSON.parse(localStorage.getItem("customer_orders")) || [];
+            document.getElementById('statOrders').innerText = orders.length;
+        }
+
+        function logoutAdmin() {
+            alert("অ্যাডমিন লগআউট করা হয়েছে।");
+            window.location.href = "index.html";
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            updateDashboardStats();
+        });
+    </script>
+</body>
+</html>
