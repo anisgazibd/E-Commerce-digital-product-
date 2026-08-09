@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অর্ডার কনফার্মেশন</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .thankyou-box {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        .success-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+        .order-details-card {
+            background: #f8f9fa;
+            border: 1px dashed #27ae60;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .home-btn {
+            display: inline-block;
+            background: #2c3e50;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="top-row" style="justify-content: center;">
+            <div class="header-title" style="color: white;">অর্ডার স্ট্যাটাস</div>
+        </div>
+    </header>
+
+    <div class="checkout-container">
+        <div class="thankyou-box">
+            <div class="success-icon">🎉</div>
+            <h2 style="color: #27ae60; margin-bottom: 8px;">অর্ডার সফলভাবে গ্রহণ করা হয়েছে!</h2>
+            <p style="font-size: 13px; color: #666;">আমরা আপনার পেমেন্ট ভেরিফাই করছি। ভেরিফিকেশন শেষ হলে দ্রুত আপনার ইমেইলে প্রোডাক্টের লিংক পাঠিয়ে দেওয়া হবে।</p>
+
+            <div class="order-details-card">
+                <div><strong>প্রোডাক্ট:</strong> <span id="ordProduct">-</span></div>
+                <div><strong>মোট পরিশোধিত:</strong> <span id="ordAmount">-</span></div>
+                <div><strong>ট্রানজেকশন আইডি:</strong> <span id="ordTrx">-</span></div>
+                <div><strong>ডেলিভারি ইমেইল:</strong> <span id="ordEmail">-</span></div>
+            </div>
+
+            <a href="index.html" class="home-btn">🏠 হোম পেজে ফিরে যান</a>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+            const info = JSON.parse(localStorage.getItem("lastOrderInfo"));
+            if(info) {
+                document.getElementById("ordProduct").innerText = info.productTitle;
+                document.getElementById("ordAmount").innerText = "৳" + info.totalAmount;
+                document.getElementById("ordTrx").innerText = info.trxId;
+                document.getElementById("ordEmail").innerText = info.email;
+            }
+        });
+    </script>
+</body>
+</html>
