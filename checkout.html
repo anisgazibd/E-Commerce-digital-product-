@@ -5,10 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ডিজিটাল অর্ডার চেকআউট</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .copy-btn {
+            background: #2c3e50;
+            color: #fff;
+            border: none;
+            padding: 3px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .num-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- হেডার -->
     <header class="header">
         <div class="top-row">
             <a href="product.html" class="back-btn">⬅️ ব্যাক</a> 
@@ -19,13 +36,12 @@
     <div class="checkout-container">
         
         <!-- অর্ডার সামারি -->
-        <div class="checkout-card">
+        <div class="checkout-card" id="productSummaryCard">
             <h3 class="card-title">📚 প্রোডাক্ট সামারি</h3>
-            
             <div class="cart-item">
                 <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80" alt="Product">
                 <div class="item-details">
-                    <h4>ফেসবুক মার্কেটিং প্রো কোর্স (A to Z)</h4>
+                    <h4 id="checkoutProductTitle">ফেসবুক মার্কেটিং প্রো কোর্স (A to Z)</h4>
                     <p>টাইপ: ডিজিটাল ডাউনলোড / কোর্স</p>
                 </div>
             </div>
@@ -33,7 +49,7 @@
             <div class="price-breakdown">
                 <div class="price-row">
                     <span>প্রোডাক্ট মূল্য:</span>
-                    <span>৳ 499</span>
+                    <span id="checkoutProductPrice">৳ 499</span>
                 </div>
                 <div class="price-row">
                     <span>ডিজিটাল ডেলিভারি ফি:</span>
@@ -42,19 +58,25 @@
                 <hr>
                 <div class="price-row total-row">
                     <span>সর্বমোট পরিশোধযোগ্য:</span>
-                    <span>৳ 499</span>
+                    <span id="checkoutTotalPayable">৳ 499</span>
                 </div>
             </div>
         </div>
 
-        <!-- পেমেন্ট ইন্সট্রাকশন বক্স -->
+        <!-- পেমেন্ট ইন্সট্রাকশন বক্স (কপি বাটন সহ) -->
         <div class="checkout-card payment-instruction-box">
             <h3 class="card-title">📱 পেমেন্ট করার নিয়ম (bKash / Nagad)</h3>
-            <p class="inst-text">নিচের যেকোনো নম্বরে <strong>৳৪৯৯</strong> সেন্ড মানি (Send Money) করুন:</p>
+            <p class="inst-text">নিচের যেকোনো নম্বরে <strong id="checkoutInstAmount">৳499</strong> সেন্ড মানি (Send Money) করুন:</p>
             
             <div class="number-box">
-                <div><strong>bKash (Personal):</strong> <span class="num">017XXXXXXXX</span></div>
-                <div><strong>Nagad (Personal):</strong> <span class="num">018XXXXXXXX</span></div>
+                <div class="num-row">
+                    <span><strong>bKash (Personal):</strong> <span class="num" id="bkashNum">01700000000</span></span>
+                    <button class="copy-btn" onclick="copyNumber('bkashNum')">Copy</button>
+                </div>
+                <div class="num-row">
+                    <span><strong>Nagad (Personal):</strong> <span class="num" id="nagadNum">01800000000</span></span>
+                    <button class="copy-btn" onclick="copyNumber('nagadNum')">Copy</button>
+                </div>
             </div>
             <p class="inst-sub">টাকা পাঠানোর পর নিচের ফর্মে আপনার তথ্য ও TrxID দিন।</p>
         </div>
@@ -64,7 +86,6 @@
             <h3 class="card-title">📩 কাস্টমার তথ্য ও পেমেন্ট ভেরিফিকেশন</h3>
             
             <form id="digitalOrderForm" onsubmit="handleDigitalOrder(event)">
-                
                 <div class="form-group">
                     <label for="custName">আপনার নাম *</label>
                     <input type="text" id="custName" placeholder="যেমন: মো: আরিয়ান রহমান" required>
@@ -98,33 +119,167 @@
                     <input type="text" id="trxId" placeholder="যেমন: 9J7X8KLM" required style="text-transform: uppercase;">
                 </div>
 
-                <button type="submit" class="confirm-order-btn">
-                    ⚡ অর্ডার প্লেস করুন (৳৪৯৯)
+                <button type="submit" class="confirm-order-btn" id="confirmBtn">
+                    ⚡ অর্ডার প্লেস করুন (৳499)
                 </button>
-
             </form>
-        </div>
-
-        <div class="trust-badge">
-            ⚡ পেমেন্ট ভেরিফাই হওয়ার সাথে সাথেই আপনার ইমেইলে ফাইল/কোর্স লিংক পাঠিয়ে দেওয়া হবে।
         </div>
 
     </div>
 
-    <!-- অর্ডার সাবমিট লজিক -->
     <script>
-        function handleDigitalOrder(e) {
+        // নম্বর কপি ফংশন
+        function copyNumber(elementId) {
+            const numText = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(numText);
+            alert("নম্বরটি কপি করা হয়েছে: " + numText);
+        }
+
+        // ডাটা লোড (সিঙ্গেল প্রোডাক্ট এবং একাধিক কার্ট প্রোডাক্ট দুটোই সাপোর্ট করবে)
+        window.addEventListener("DOMContentLoaded", function() {
+            const orderData = JSON.parse(localStorage.getItem("checkoutOrder"));
+            
+            if (orderData) {
+                let totalAmount = 0;
+                let itemsList = [];
+
+                if (Array.isArray(orderData)) {
+                    itemsList = orderData;
+                } else if (orderData.items && Array.isArray(orderData.items)) {
+                    itemsList = orderData.items;
+                }
+
+                // যদি একাধিক প্রোডাক্ট থাকে
+                if (itemsList.length > 0) {
+                    totalAmount = itemsList.reduce((sum, item) => sum + Number(item.totalAmount || ((item.unitPrice || item.price || 0) * (item.quantity || 1))), 0);
+                    
+                    let itemsHtml = '';
+                    itemsList.forEach(item => {
+                        const img = item.img || item.image || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&q=80';
+                        const itemPrice = Number(item.unitPrice || item.price || 0);
+                        const itemQty = Number(item.quantity || 1);
+                        const itemTotal = Number(item.totalAmount || (itemPrice * itemQty));
+
+                        itemsHtml += `
+                            <div class="cart-item">
+                                <img src="${img}" alt="${item.title}">
+                                <div class="item-details">
+                                    <h4>${item.title}</h4>
+                                    <p>পরিমাণ: ${itemQty}টি | মূল্য: ৳${itemTotal}</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    const oldCartItem = document.querySelector("#productSummaryCard .cart-item");
+                    if (oldCartItem) {
+                        oldCartItem.outerHTML = itemsHtml;
+                    }
+                } else {
+                    // যদি একটি মাত্র প্রোডাক্ট থাকে
+                    totalAmount = Number(orderData.totalAmount || orderData.unitPrice || orderData.price || 499);
+
+                    if (orderData.title) {
+                        document.getElementById("checkoutProductTitle").innerText = orderData.title;
+                    }
+                    if (orderData.img || orderData.image) {
+                        const singleImg = document.querySelector(".cart-item img");
+                        if (singleImg) singleImg.src = orderData.img || orderData.image;
+                    }
+                }
+
+                document.getElementById("checkoutProductPrice").innerText = `৳ ${totalAmount}`;
+                document.getElementById("checkoutTotalPayable").innerText = `৳ ${totalAmount}`;
+                document.getElementById("checkoutInstAmount").innerText = `৳${totalAmount}`;
+                document.getElementById("confirmBtn").innerText = `⚡ অর্ডার প্লেস করুন (৳${totalAmount})`;
+            }
+        });
+
+        // অর্ডার সাবমিট ও টেলিগ্রাম বোট পাঠানোর ফংশন
+        async function handleDigitalOrder(e) {
             e.preventDefault();
+
+            const confirmBtn = document.getElementById("confirmBtn");
+            confirmBtn.innerText = "প্রসেসিং হচ্ছে...";
+            confirmBtn.disabled = true;
             
             const name = document.getElementById("custName").value;
             const email = document.getElementById("custEmail").value;
+            const phone = document.getElementById("custPhone").value;
+            const method = document.getElementById("paymentMethod").value;
+            const senderPhone = document.getElementById("senderPhone").value;
             const trxId = document.getElementById("trxId").value;
             
-            alert(`ধন্যবাদ ${name}!\n\nআপনার পেমেন্ট ভেরিফিকেশন রিকোয়েস্ট গ্রহণ করা হয়েছে।\nTrxID: ${trxId}\n\nপেমেন্ট ভেরিফাই করে অল্প কিছুক্ষণের মধ্যেই ${email} ইমেইলে আপনার ডাউনলোড লিংক বা কোর্স এক্সেস পাঠিয়ে দেয়া হবে।`);
-            
-            window.location.href = "index.html";
+            const orderData = JSON.parse(localStorage.getItem("checkoutOrder"));
+            let productSummary = "";
+            let totalAmount = 499;
+
+            if (orderData) {
+                let itemsList = [];
+                if (Array.isArray(orderData)) {
+                    itemsList = orderData;
+                } else if (orderData.items && Array.isArray(orderData.items)) {
+                    itemsList = orderData.items;
+                }
+
+                if (itemsList.length > 0) {
+                    totalAmount = itemsList.reduce((sum, item) => sum + Number(item.totalAmount || ((item.unitPrice || item.price || 0) * (item.quantity || 1))), 0);
+                    productSummary = itemsList.map((item, idx) => {
+                        const price = Number(item.unitPrice || item.price || 0);
+                        const qty = Number(item.quantity || 1);
+                        const itemTotal = Number(item.totalAmount || (price * qty));
+                        return `${idx + 1}. ${item.title} (${qty}টি) - ৳${itemTotal}`;
+                    }).join("\n");
+                } else {
+                    productSummary = orderData.title || "ফেসবুক মার্কেটিং প্রো কোর্স";
+                    totalAmount = Number(orderData.totalAmount || orderData.unitPrice || orderData.price || 499);
+                }
+            } else {
+                productSummary = "ফেসবুক মার্কেটিং প্রো কোর্স";
+            }
+
+            // টেলিগ্রাম সেটিং (আপনার Bot Token এবং Chat ID)
+            const BOT_TOKEN = "8875254233:AAH0GxoP478DcgpsGXDoeeR4iCsRpwYiKEI";
+            const CHAT_ID = "2132743108";
+
+            const message = `🛒 *নতুন ডিজিটাল অর্ডার এসেছে!*
+─────────────────
+📦 *প্রোডাক্ট:*
+${productSummary}
+
+💰 *সর্বমোট মূল্য:* ৳${totalAmount}
+👤 *নাম:* ${name}
+📧 *ইমেইল:* ${email}
+📞 *ফোন:* ${phone}
+💳 *মেথড:* ${method}
+📱 *প্রেরক নম্বর:* ${senderPhone}
+🔑 *TrxID:* \`${trxId}\`
+─────────────────`;
+
+            try {
+                if (BOT_TOKEN !== "YOUR_TELEGRAM_BOT_TOKEN") {
+                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: message,
+                            parse_mode: "Markdown"
+                        })
+                    });
+                }
+            } catch (error) {
+                console.log("Telegram alert error:", error);
+            }
+
+            // থ্যাঙ্ক ইউ পেজে ডাটা পাঠানোর জন্য সেভ
+            const successOrder = { name, email, trxId, totalAmount, productTitle: productSummary };
+            localStorage.setItem("lastOrderInfo", JSON.stringify(successOrder));
+            localStorage.removeItem("checkoutOrder");
+            localStorage.removeItem("cart");
+
+            window.location.href = "thank-you.html";
         }
     </script>
-
 </body>
 </html>
