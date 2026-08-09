@@ -5,6 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>প্রোডাক্ট ডিটেইলস</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* স্লাইডিং কার্ট ড্রয়ার স্টাইল */
+        .cart-drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+        .cart-drawer-overlay.active {
+            display: block;
+        }
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: -360px;
+            width: 320px;
+            max-width: 85%;
+            height: 100%;
+            background: #ffffff;
+            box-shadow: -3px 0 10px rgba(0,0,0,0.15);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-drawer.open {
+            right: 0;
+        }
+        .cart-drawer-header {
+            background: #ff6600;
+            color: #ffffff;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .cart-drawer-close {
+            cursor: pointer;
+            font-size: 20px;
+            color: #ffffff;
+            line-height: 1;
+        }
+        .cart-drawer-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        .cart-drawer-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .cart-drawer-item img {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        .cart-drawer-item-info {
+            flex: 1;
+            margin-left: 10px;
+        }
+        .cart-drawer-item-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .cart-drawer-item-price {
+            color: #ff6600;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .cart-drawer-qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .cart-drawer-qty-controls button {
+            width: 24px;
+            height: 24px;
+            border: 1px solid #ddd;
+            background: #f8f8f8;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .cart-drawer-delete-btn {
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
+        }
+        .cart-drawer-footer {
+            padding: 15px;
+            border-top: 1px solid #eeeeee;
+            background: #fafafa;
+        }
+        .cart-drawer-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: #222;
+        }
+        .cart-drawer-checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background: #ff6600;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .cart-drawer-checkout-btn:hover {
+            background: #e65c00;
+        }
+    </style>
 </head>
 <body>
 
@@ -12,7 +142,7 @@
     <header class="header">
         <div class="top-row">
             <a href="index.html" class="back-btn">⬅️ ব্যাক</a> 
-            <div class="cart-icon">🛒 <span id="cartCount">0</span></div>
+            <div class="cart-icon" id="cartIcon" style="cursor: pointer;">🛒 <span id="cartCount">0</span></div>
         </div>
     </header>
 
@@ -31,12 +161,12 @@
         </div>
 
         <!-- ৮ ও ৯. টাইটেল এবং রেটিং -->
-        <h2 class="details-title">ফেসবুক মার্কেটিং প্রো কোর্স (A to Z)</h2>
+        <h2 class="details-title" id="productTitle">ফেসবুক মার্কেটিং প্রো কোর্স (A to Z)</h2>
         <div class="details-rating">⭐⭐⭐⭐⭐ <span>(4.9 - 150 Reviews)</span></div>
 
         <!-- ১০. প্রোডাক্টের দাম -->
         <div class="details-price">
-            <span class="price-now">৳ ৪৯৯</span>
+            <span class="price-now" id="totalPrice">৳ 499</span>
             <span class="price-old">৳ ৯৯৯</span>
         </div>
 
@@ -53,9 +183,7 @@
         <!-- ১২. অ্যাড টু কার্ট এবং বাই নাও বাটন -->
         <div class="action-buttons">
             <button class="add-to-cart-btn" onclick="addToCart()">🛒 Add to Cart</button>
-            <a href="checkout.html" style="text-decoration: none; flex: 1;">
-                <button class="buy-now-btn" style="width: 100%;">⚡ Buy Now</button>
-            </a>
+            <button class="buy-now-btn" style="flex: 1;" onclick="goToCheckout()">⚡ Buy Now</button>
         </div>
 
         <!-- ১৩. কন্টাক্ট বাটন (হোয়াটসঅ্যাপ ও টেলিগ্রাম) -->
@@ -78,8 +206,168 @@
         </div>
     </div>
 
-    <!-- গ্যালারি এবং কার্ট লজিক -->
+    <!-- স্লাইডিং কার্ট ড্রয়ার সেকশন -->
+    <div class="cart-drawer-overlay" id="cartOverlay" onclick="closeCartDrawer()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-drawer-header">
+            <span>🛍️ Shopping Cart</span>
+            <span class="cart-drawer-close" onclick="closeCartDrawer()">✕</span>
+        </div>
+        <div class="cart-drawer-body" id="cartDrawerBody">
+            <!-- কার্ট আইটেমসমূহ ডায়নামিক্যালি এখানে আসবে -->
+        </div>
+        <div class="cart-drawer-footer">
+            <div class="cart-drawer-total">
+                <span>Total:</span>
+                <span id="drawerTotalAmount">৳0</span>
+            </div>
+            <button class="cart-drawer-checkout-btn" onclick="proceedToCheckoutFromDrawer()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- ডায়নামিক ক্যালকুলেশন ও লজিক -->
     <script>
+        let unitPrice = 499; // ডিফল্ট মূল দাম
+        let productTitle = "ফেসবুক মার্কেটিং প্রো কোর্স (A to Z)";
+        
+        const qtyInput = document.getElementById("productQty");
+        const totalPriceEl = document.getElementById("totalPrice");
+
+        // কার্ট সংখ্যা আপডেট করার ফংশন
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let totalQty = 0;
+            if (Array.isArray(cart)) {
+                totalQty = cart.reduce((sum, item) => sum + Number(item.quantity || 1), 0);
+            }
+            const cartCountEl = document.getElementById("cartCount");
+            if (cartCountEl) {
+                cartCountEl.innerText = totalQty;
+            }
+        }
+
+        // কার্ট ড্রয়ার খোলা ও বন্ধ করা
+        function openCartDrawer() {
+            renderCartDrawer();
+            document.getElementById("cartOverlay").classList.add("active");
+            document.getElementById("cartDrawer").classList.add("open");
+        }
+
+        function closeCartDrawer() {
+            document.getElementById("cartOverlay").classList.remove("active");
+            document.getElementById("cartDrawer").classList.remove("open");
+        }
+
+        // কার্ট ড্রয়ারে সব প্রোডাক্ট ডায়নামিক্যালি রেন্ডার করা
+        function renderCartDrawer() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const body = document.getElementById("cartDrawerBody");
+            const totalEl = document.getElementById("drawerTotalAmount");
+
+            if (!body || !totalEl) return;
+
+            if (cart.length === 0) {
+                body.innerHTML = "<p style='text-align:center; color:#777; margin-top:30px;'>আপনার কার্টটি খালি!</p>";
+                totalEl.innerText = "৳ 0";
+                updateCartCount();
+                return;
+            }
+
+            let html = "";
+            let grandTotal = 0;
+
+            cart.forEach((item, index) => {
+                const itemPrice = Number(item.unitPrice || item.price || 0);
+                const itemQty = Number(item.quantity || 1);
+                const itemTotal = itemPrice * itemQty;
+                grandTotal += itemTotal;
+
+                html += `
+                    <div class="cart-drawer-item">
+                        <img src="${item.img || 'https://via.placeholder.com/50'}" alt="${item.title}">
+                        <div class="cart-drawer-item-info">
+                            <div class="cart-drawer-item-title">${item.title}</div>
+                            <div class="cart-drawer-item-price">৳ ${itemPrice}</div>
+                            <div class="cart-drawer-qty-controls">
+                                <button onclick="changeDrawerQty(${index}, -1)">-</button>
+                                <span>${itemQty}</span>
+                                <button onclick="changeDrawerQty(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <span class="cart-drawer-delete-btn" onclick="removeDrawerItem(${index})">🗑️</span>
+                    </div>
+                `;
+            });
+
+            body.innerHTML = html;
+            totalEl.innerText = "৳ " + grandTotal;
+            updateCartCount();
+        }
+
+        // কার্ট ড্রয়ারের ভেতর থেকে পরিমাণ বাড়ানো বা কমানো
+        function changeDrawerQty(index, change) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            if (cart[index]) {
+                let currentQty = Number(cart[index].quantity || 1) + change;
+                if (currentQty <= 0) {
+                    cart.splice(index, 1);
+                } else {
+                    cart[index].quantity = currentQty;
+                    const price = Number(cart[index].unitPrice || cart[index].price || 0);
+                    cart[index].totalAmount = currentQty * price;
+                }
+                localStorage.setItem("cart", JSON.stringify(cart));
+                renderCartDrawer();
+            }
+        }
+
+        // কার্ট ড্রয়ার থেকে প্রোডাক্ট রিমুভ করা
+        function removeDrawerItem(index) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCartDrawer();
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে তথ্য দেখাবে
+        window.addEventListener("DOMContentLoaded", function() {
+            const savedProduct = JSON.parse(localStorage.getItem("selectedProduct"));
+            
+            if (savedProduct) {
+                productTitle = savedProduct.title || document.getElementById("productTitle").innerText;
+                unitPrice = Number(savedProduct.price) || 499;
+                
+                // স্ক্রিনের টাইটেল, প্রাইস ও ইমেজ আপডেট
+                document.getElementById("productTitle").innerText = productTitle;
+                if (savedProduct.img) {
+                    document.getElementById("mainProductImg").src = savedProduct.img;
+                    const firstThumb = document.querySelector('.thumbnail-gallery img');
+                    if (firstThumb) firstThumb.src = savedProduct.img;
+                }
+                updateTotalPrice();
+            } else {
+                productTitle = document.getElementById("productTitle").innerText;
+                updateTotalPrice();
+            }
+
+            // কার্ট সংখ্যা আপডেট
+            updateCartCount();
+
+            // কার্ট আইকনে ক্লিক করলে স্লাইডিং বার দেখাবে
+            const cartIcon = document.getElementById("cartIcon");
+            if (cartIcon) {
+                cartIcon.addEventListener("click", function() {
+                    openCartDrawer();
+                });
+            }
+        });
+
+        function updateTotalPrice() {
+            const currentQty = parseInt(qtyInput.value) || 1;
+            const calculatedTotal = unitPrice * currentQty;
+            totalPriceEl.innerText = "৳ " + calculatedTotal;
+        }
+
         function changeImage(element) {
             document.getElementById("mainProductImg").src = element.src;
             let thumbs = document.querySelectorAll('.thumbnail-gallery img');
@@ -87,21 +375,68 @@
             element.classList.add('thumb-active');
         }
 
-        let qtyInput = document.getElementById("productQty");
         function increaseQty() {
             qtyInput.value = parseInt(qtyInput.value) + 1;
+            updateTotalPrice();
         }
+
         function decreaseQty() {
             if (parseInt(qtyInput.value) > 1) {
                 qtyInput.value = parseInt(qtyInput.value) - 1;
+                updateTotalPrice();
             }
         }
 
-        let cartCount = 0;
+        // কার্টে প্রোডাক্ট সেভ করার ফংশন
         function addToCart() {
-            cartCount += parseInt(qtyInput.value);
-            document.getElementById("cartCount").innerText = cartCount;
-            alert("প্রোডাক্টটি কার্টে যুক্ত হয়েছে!");
+            const qty = parseInt(qtyInput.value) || 1;
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const savedProduct = JSON.parse(localStorage.getItem("selectedProduct")) || {};
+            const currentImg = savedProduct.img || document.getElementById("mainProductImg").src;
+            
+            const existingIndex = cart.findIndex(item => item.title === productTitle);
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity = Number(cart[existingIndex].quantity) + qty;
+                cart[existingIndex].unitPrice = unitPrice;
+                cart[existingIndex].totalAmount = cart[existingIndex].quantity * unitPrice;
+            } else {
+                cart.push({
+                    title: productTitle,
+                    quantity: qty,
+                    unitPrice: Number(unitPrice),
+                    totalAmount: Number(unitPrice) * qty,
+                    img: currentImg
+                });
+            }
+            
+            localStorage.setItem("cart", JSON.stringify(cart));
+            openCartDrawer();
+        }
+
+        // স্লাইড কার্ট থেকে সরাসরি চেকআউট পেজে সব প্রোডাক্ট পাঠানোর ফংশন
+        function proceedToCheckoutFromDrawer() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            if (cart.length === 0) {
+                alert("আপনার কার্ট খালি!");
+                return;
+            }
+            
+            const checkoutData = cart.map(item => ({
+                title: item.title,
+                quantity: Number(item.quantity || 1),
+                unitPrice: Number(item.unitPrice || item.price || 0),
+                totalAmount: Number(item.quantity || 1) * Number(item.unitPrice || item.price || 0),
+                img: item.img
+            }));
+
+            localStorage.setItem("checkoutOrder", JSON.stringify(checkoutData));
+            window.location.href = "checkout.html";
+        }
+
+        // সরাসরি বাই নাও বাটনে ক্লিক করলে প্রোডাক্ট কার্টে যোগ হয়ে চেকআউটে নিয়ে যাবে
+        function goToCheckout() {
+            addToCart();
+            proceedToCheckoutFromDrawer();
         }
     </script>
 
